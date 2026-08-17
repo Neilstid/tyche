@@ -61,8 +61,11 @@ class TestDataEngine(unittest.TestCase):
         self.assertEqual(settings.portfolio.initial_cash, 10000.00)
         self.assertGreater(len(settings.markets.stock_markets), 0)
         self.assertGreater(len(settings.markets.default_etfs), 0)
-        self.assertIn("SPY", settings.markets.default_tickers)
-        self.assertIn("QQQ", settings.markets.default_tickers)
+        all_tickers = settings.markets.get_all_tickers()
+        self.assertIn("^GSPC", all_tickers)
+        self.assertIn("SPY", all_tickers)
+        self.assertIn("QQQ", all_tickers)
+        self.assertIn("XLK", all_tickers)
 
 
 

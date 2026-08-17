@@ -82,7 +82,16 @@ class MarketsSettingsConfig(BaseModel):
         EtfPresetItem(name="Technology Select Sector SPDR Fund", symbol="XLK", category="Sector - Tech"),
         EtfPresetItem(name="Financial Select Sector SPDR Fund", symbol="XLF", category="Sector - Financials"),
     ])
-    default_tickers: List[str] = Field(default_factory=lambda: ["SPY", "QQQ", "VTI", "IWM", "GLD", "TLT"])
+    default_tickers: Optional[List[str]] = Field(default=None, description="Optional override list of tickers")
+
+    def get_all_tickers(self) -> List[str]:
+        """
+        Get all ticker symbols from stock_markets and default_etfs.
+        Returns unique symbols preserving definition order.
+        """
+        symbols = [m.symbol for m in self.stock_markets] + [e.symbol for e in self.default_etfs]
+        return list(dict.fromkeys(symbols))
+
 
 
 

@@ -45,14 +45,6 @@ markets:
       symbol: "XLF"
       category: "Sector - Financials"
 
-  default_tickers:
-    - "SPY"
-    - "QQQ"
-    - "VTI"
-    - "IWM"
-    - "GLD"
-    - "TLT"
-
 execution:
   max_retry_attempts: 2
   fallback_action: "HOLD"
