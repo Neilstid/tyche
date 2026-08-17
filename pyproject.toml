@@ -1,0 +1,26 @@
+[project]
+name = "tyche"
+version = "0.1.0"
+description = "Multi-Agent Stock Investment Platform"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "crewai>=0.28.0",
+    "litellm>=1.30.0",
+    "yfinance>=0.2.36",
+    "pandas>=2.0.0",
+    "pandas-ta>=0.3.14b0",
+    "supabase>=2.3.0",
+    "plotly>=5.18.0",
+    "streamlit>=1.31.0",
+    "jinja2>=3.1.3",
+    "pyyaml>=6.0.1",
+    "pydantic>=2.6.0",
+    "requests>=2.31.0",
+    "python-dotenv>=1.0.1"
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]

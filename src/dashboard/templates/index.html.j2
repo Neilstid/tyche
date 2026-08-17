@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tyche — Multi-Agent Stock Investment Platform</title>
+    <meta name="description" content="Simulate, backtest, and compare AI-driven stock trading strategies with multi-agent architecture.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Plotly CDN -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --card-border: #1f293d;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-purple: #8b5cf6;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            line-height: 1.5;
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--card-border);
+            margin-bottom: 24px;
+        }
+
+        .brand-title {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-badge {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.05em;
+        }
+
+        .last-updated {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-blue);
+        }
+
+        .kpi-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .kpi-value {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
+        .positive { color: var(--accent-green); }
+        .negative { color: var(--accent-red); }
+        .neutral { color: var(--text-main); }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chart-container {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+
+        .charts-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .table-container {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 32px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: #1e293b;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 14px 18px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--card-border);
+            font-family: var(--font-mono);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge-buy {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .badge-sell {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .badge-hold {
+            background: rgba(156, 163, 175, 0.15);
+            color: var(--text-muted);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .agent-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .agent-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--accent-blue);
+        }
+
+        .agent-role {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .agent-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 24px 0;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid var(--card-border);
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-title">
+            <span>⚡ TYCHE PLATFORM</span>
+            <span class="brand-badge">Multi-Agent AI</span>
+        </div>
+        <div class="last-updated">
+            Last Updated: {{ last_updated }} UTC
+        </div>
+    </header>
+
+    <!-- KPI Summary Row -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-label">Total Portfolio Value</div>
+            <div class="kpi-value">${{ "{:,.2f}".format(summary.total_value) }}</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Cumulative Return</div>
+            <div class="kpi-value {{ 'positive' if summary.cumulative_return_pct >= 0 else 'negative' }}">
+                {{ "{:+.2f}".format(summary.cumulative_return_pct) }}%
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Sharpe Ratio</div>
+            <div class="kpi-value neutral">{{ "{:.2f}".format(summary.sharpe_ratio) }}</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Max Drawdown</div>
+            <div class="kpi-value negative">{{ "{:.2f}".format(summary.max_drawdown * 100) }}%</div>
+        </div>
+    </div>
+
+    <!-- Main Base 100 Plotly Line Chart -->
+    <div class="section-title">📈 Strategy Performance (Base 100 Index vs S&P 500)</div>
+    <div class="chart-container">
+        {{ line_chart_html | safe }}
+    </div>
+
+    <!-- Bar Charts Row -->
+    <div class="charts-row">
+        <div class="chart-container">
+            <div class="section-title">🎯 Win Rate Comparison (%)</div>
+            {{ win_rate_chart_html | safe }}
+        </div>
+        <div class="chart-container">
+            <div class="section-title">📉 Max Drawdown Comparison (%)</div>
+            {{ drawdown_chart_html | safe }}
+        </div>
+    </div>
+
+    <!-- Active Positions Table -->
+    <div class="section-title">💼 Active Portfolio Positions</div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Symbol</th>
+                    <th>Quantity</th>
+                    <th>Avg Buy Price</th>
+                    <th>Current Price</th>
+                    <th>Market Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pos in positions %}
+                <tr>
+                    <td style="font-weight: 600; color: var(--accent-blue);">{{ pos.symbol }}</td>
+                    <td>{{ "{:,.2f}".format(pos.quantity) }}</td>
+                    <td>${{ "{:,.2f}".format(pos.avg_buy_price) }}</td>
+                    <td>${{ "{:,.2f}".format(pos.current_price) }}</td>
+                    <td>${{ "{:,.2f}".format(pos.market_value) }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="text-align: center; color: var(--text-muted);">No active positions open.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Recent Transactions Table -->
+    <div class="section-title">📜 Recent Execution Logs</div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Executed At</th>
+                    <th>Agent</th>
+                    <th>Symbol</th>
+                    <th>Action</th>
+                    <th>Quantity</th>
+                    <th>Executed Price</th>
+                    <th>Reasoning Justification</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tx in transactions[:15] %}
+                <tr>
+                    <td style="font-size: 12px; color: var(--text-muted);">{{ tx.executed_at or "N/A" }}</td>
+                    <td>{{ tx.agent_name }}</td>
+                    <td style="font-weight: 600;">{{ tx.symbol }}</td>
+                    <td>
+                        <span class="badge-{{ tx.action.lower() }}">{{ tx.action }}</span>
+                    </td>
+                    <td>{{ "{:,.2f}".format(tx.quantity) }}</td>
+                    <td>${{ "{:,.2f}".format(tx.executed_price or 0.0) }}</td>
+                    <td style="font-size: 12px; max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ tx.reasoning }}">
+                        {{ tx.reasoning }}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" style="text-align: center; color: var(--text-muted);">No transaction logs recorded yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Agent Team Architecture -->
+    <div class="section-title">🤖 Active CrewAI Agent Roster</div>
+    <div class="agents-grid">
+        {% for agent in agents %}
+        <div class="agent-card">
+            <div class="agent-name">{{ agent.name }}</div>
+            <div class="agent-role">{{ agent.role }}</div>
+            <div class="agent-meta">
+                <div><strong>LLM Model:</strong> <code>{{ agent.llm_model }}</code></div>
+                <div><strong>Prompt File:</strong> <code>{{ agent.prompt_file or "Default" }}</code></div>
+                <div><strong>Tools:</strong> <code>{{ agent.tools_list | join(', ') if agent.tools_list else "None" }}</code></div>
+            </div>
+        </div>
+        {% else %}
+        <div class="agent-card">
+            <div class="agent-name">Sequential Team Alpha</div>
+            <div class="agent-role">Macro Analyst, Technical Analyst & Portfolio Manager</div>
+            <div class="agent-meta">
+                <div><strong>LLM Model:</strong> <code>gpt-4o-mini / gemini-1.5-flash</code></div>
+                <div><strong>Architecture:</strong> <code>Sequential Crew</code></div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <footer>
+        Tyche Multi-Agent Stock Investment Platform &copy; 2026 — Built with CrewAI, Supabase, Plotly & Jinja2
+    </footer>
+
+</body>
+</html>
