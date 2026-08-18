@@ -1,5 +1,6 @@
 """Tyche Platform Main CLI Entry Point supporting verification, paper trading, backtesting, and static site building modes."""
 
+import os
 import sys
 import argparse
 import logging
@@ -134,7 +135,7 @@ def run_paper_trading_pipeline() -> bool:
 
     db_client = SupabaseDBClient()
     settings = load_default_settings("config/default_settings.yaml")
-    team_config_paths = ["config/teams/sequential_team_alpha.yaml", "config/teams/hierarchical_team_beta.yaml"]
+    team_config_paths = list(os.path.join("config/teams/", os.listdir("config/teams/")))
     tickers = settings.markets.get_all_tickers() or ["AAPL", "NVDA", "MSFT"]
 
     engine = PaperTradingEngine(db_client=db_client)

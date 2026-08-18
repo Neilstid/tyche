@@ -1,0 +1,41 @@
+team:
+  name: "GPT Hierarchical Team"
+  architecture: "hierarchical"
+  description: "A team managed dynamically by a Manager Agent coordinating Macro and Technical specialists using a OpenAI model (openai/gpt-oss-20b)."
+
+manager:
+  name: "Senior Risk & Strategy Manager"
+  role: "Team Manager & Lead Orchestrator"
+  goal: "Delegate tasks dynamically between analysts and ensure rigorous multi-factor justification for all portfolio decisions."
+  llm_model: "openrouter/openai/gpt-oss-20b"
+
+agents:
+  - name: "Macro Analyst"
+    role: "Macroeconomic & News Sentiment Specialist"
+    goal: "Analyze global news, macroeconomic trends, and market sentiment."
+    backstory: "Global macro specialist evaluating economic data and political events."
+    llm_model: "openrouter/openai/gpt-oss-20b"
+    prompt_file: "prompts/macro_analyst.txt"
+    tools:
+      - "fetch_news"
+      - "analyze_sentiment"
+
+  - name: "Technical Analyst"
+    role: "Quantitative Technical Indicators Specialist"
+    goal: "Evaluate RSI, MACD, and SMA indicators."
+    backstory: "Technical analyst evaluating momentum and technical levels."
+    llm_model: "openrouter/openai/gpt-oss-20b"
+    prompt_file: "prompts/technical_analyst.txt"
+    tools:
+      - "get_stock_technicals"
+      - "get_historical_prices"
+
+  - name: "Portfolio Manager"
+    role: "Trade Execution Officer"
+    goal: "Formulate trade decisions adhering to position sizing and risk constraints."
+    backstory: "Portfolio manager responsible for trade execution and risk control."
+    llm_model: "openrouter/openai/gpt-oss-20b"
+    prompt_file: "prompts/portfolio_manager.txt"
+    tools:
+      - "get_portfolio_status"
+      - "get_stock_price"
