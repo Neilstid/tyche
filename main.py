@@ -136,7 +136,7 @@ def run_paper_trading_pipeline() -> bool:
 
     db_client = SupabaseDBClient()
     settings = load_default_settings("config/default_settings.yaml")
-    team_config_paths = list(os.path.join("config/teams/", os.listdir("config/teams/")))
+    team_config_paths = [os.path.join("config/teams/", p) for p in os.listdir("config/teams/")]
     tickers = settings.markets.get_all_tickers() or ["AAPL", "NVDA", "MSFT"]
 
     engine = PaperTradingEngine(db_client=db_client)
