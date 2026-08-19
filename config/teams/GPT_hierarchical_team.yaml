@@ -1,6 +1,7 @@
 team:
   name: "GPT Hierarchical Team"
   architecture: "hierarchical"
+  model: "openrouter/openai/gpt-oss-20b"
   description: "A team managed dynamically by a Manager Agent coordinating Macro and Technical specialists using a OpenAI model (openai/gpt-oss-20b)."
 
 manager:

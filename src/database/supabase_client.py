@@ -100,8 +100,11 @@ class SupabaseDBClient:
         """Fetch all teams registered in Supabase."""
         if not self._is_connected or not self.client:
             return [
-                {"id": "00000000-0000-0000-0000-000000000001", "name": "Sequential Team Alpha", "architecture": "sequential"},
-                {"id": "00000000-0000-0000-0000-000000000002", "name": "Hierarchical Team Beta", "architecture": "hierarchical"}
+                {"id": "00000000-0000-0000-0000-000000000001", "name": "Sequential Team Alpha", "architecture": "sequential", "model": "openrouter/qwen/qwen3.7-flash"},
+                {"id": "00000000-0000-0000-0000-000000000002", "name": "Hierarchical Team Beta", "architecture": "hierarchical", "model": "openrouter/qwen/qwen3.7-flash"},
+                {"id": "00000000-0000-0000-0000-000000000004", "name": "GPT Hierarchical Team", "architecture": "hierarchical", "model": "openrouter/openai/gpt-oss-20b"},
+                {"id": "00000000-0000-0000-0000-000000000005", "name": "Gemma Hierarchical Team", "architecture": "hierarchical", "model": "openrouter/google/gemma-3-27b-it"},
+                {"id": "00000000-0000-0000-0000-000000000006", "name": "Mistral Hierarchical Team", "architecture": "hierarchical", "model": "openrouter/mistralai/mistral-small-24b-instruct-2501"}
             ]
         try:
             response = self.client.table("teams").select("*").execute()

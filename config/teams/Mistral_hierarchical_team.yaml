@@ -1,6 +1,7 @@
 team:
   name: "Mistral Hierarchical Team"
   architecture: "hierarchical"
+  model: "openrouter/mistralai/mistral-small-24b-instruct-2501"
   description: "A team managed dynamically by a Manager Agent coordinating Macro and Technical specialists using a mistral model (mistral-small-24b)."
 
 manager:

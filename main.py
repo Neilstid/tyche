@@ -107,6 +107,7 @@ def run_verification() -> bool:
         team_create = TeamCreate(
             name=team_cfg.team.name,
             architecture=team_cfg.team.architecture,
+            model=team_cfg.team.model,
             description=team_cfg.team.description
         )
         db_team = db_client.get_or_create_team(team_create)
@@ -148,6 +149,7 @@ def run_paper_trading_pipeline() -> bool:
             team_create = TeamCreate(
                 name=team_cfg.team.name,
                 architecture=team_cfg.team.architecture,
+                model=team_cfg.team.model,
                 description=team_cfg.team.description
             )
             db_team = db_client.get_or_create_team(team_create)

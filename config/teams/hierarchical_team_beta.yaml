@@ -1,6 +1,7 @@
 team:
   name: "Hierarchical Team Beta"
   architecture: "hierarchical"
+  model: "openrouter/qwen/qwen3.7-flash"
   description: "A team managed dynamically by a Manager Agent coordinating Macro and Technical specialists."
 
 manager:

@@ -146,6 +146,7 @@ CREATE TABLE IF NOT EXISTS teams (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255) NOT NULL UNIQUE,
     architecture VARCHAR(50) NOT NULL CHECK (architecture IN ('sequential', 'hierarchical')),
+    model VARCHAR(255) DEFAULT '',
     description TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

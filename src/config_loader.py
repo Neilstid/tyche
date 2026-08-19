@@ -32,6 +32,7 @@ class TeamYamlMetadata(BaseModel):
     """Pydantic model for team-level configuration metadata."""
     name: str = Field(..., description="Name of the team")
     architecture: Literal["sequential", "hierarchical"] = Field(..., description="Execution architecture")
+    model: Optional[str] = Field(default="", description="Primary LLM model identifier for the team")
     description: Optional[str] = Field(default="", description="Team description")
 
 

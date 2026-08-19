@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field, ConfigDict
 class TeamBase(BaseModel):
     name: str = Field(..., description="Unique name of the agent team")
     architecture: Literal["sequential", "hierarchical"] = Field(..., description="Team architecture pattern")
+    model: Optional[str] = Field(default="", description="LLM model identifier used by the team")
     description: Optional[str] = Field(default="", description="Detailed summary of team strategy")
 
 

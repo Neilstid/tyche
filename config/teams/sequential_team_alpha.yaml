@@ -1,6 +1,7 @@
 team:
   name: "Sequential Team Alpha"
   architecture: "sequential"
+  model: "openrouter/qwen/qwen3.7-flash"
   description: "A pipeline team where Macro Analyst passes sentiment to Technical Analyst, who feeds into Portfolio Manager."
 
 agents:

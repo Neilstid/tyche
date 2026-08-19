@@ -1,7 +1,8 @@
 team:
-  name: "GPT Hierarchical Team"
+  name: "Gemma Hierarchical Team"
   architecture: "hierarchical"
-  description: "A team managed dynamically by a Manager Agent coordinating Macro and Technical specialists using a Google model emma-3-27b-it)."
+  model: "openrouter/google/gemma-3-27b-it"
+  description: "A team managed dynamically by a Manager Agent coordinating Macro and Technical specialists using a Google model (gemma-3-27b-it)."
 
 manager:
   name: "Senior Risk & Strategy Manager"

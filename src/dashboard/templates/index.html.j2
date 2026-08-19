@@ -241,6 +241,26 @@
             gap: 6px;
         }
 
+        .badge-arch {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-blue);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .badge-model {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent-purple);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 12px;
+            font-family: var(--font-mono);
+        }
+
         footer {
             text-align: center;
             padding: 24px 0;
@@ -285,22 +305,67 @@
         </div>
     </div>
 
+    <!-- Cross-Model & Architecture Team Comparison Matrix -->
+    <div class="section-title">⚔️ Cross-Model & Architecture Experiment Matrix</div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Team Name</th>
+                    <th>Architecture</th>
+                    <th>Model Identifier</th>
+                    <th>Portfolio Value</th>
+                    <th>Return (%)</th>
+                    <th>Sharpe Ratio</th>
+                    <th>Max Drawdown</th>
+                    <th>Win Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in all_teams %}
+                <tr>
+                    <td style="font-weight: 600; color: var(--accent-blue);">{{ t.team_name }}</td>
+                    <td><span class="badge-arch">{{ t.architecture }}</span></td>
+                    <td><span class="badge-model">{{ t.model or "Default" }}</span></td>
+                    <td>${{ "{:,.2f}".format(t.total_value) }}</td>
+                    <td class="{{ 'positive' if t.cumulative_return_pct >= 0 else 'negative' }}" style="font-weight: 600;">
+                        {{ "{:+.2f}".format(t.cumulative_return_pct) }}%
+                    </td>
+                    <td>{{ "{:.2f}".format(t.sharpe_ratio) }}</td>
+                    <td class="negative">{{ "{:.2f}".format(t.max_drawdown * 100) }}%</td>
+                    <td class="positive">{{ "{:.1f}".format(t.win_rate_pct) }}%</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" style="text-align: center; color: var(--text-muted);">No teams registered.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
     <!-- Main Base 100 Plotly Line Chart -->
-    <div class="section-title">📈 Strategy Performance (Base 100 Index vs S&P 500)</div>
+    <div class="section-title">📈 Cross-Team Strategy Performance (Base 100 Index vs S&P 500)</div>
     <div class="chart-container">
         {{ line_chart_html | safe }}
     </div>
 
-    <!-- Bar Charts Row -->
+    <!-- Bar Charts Row 1: Returns & Win Rate -->
     <div class="charts-row">
+        <div class="chart-container">
+            <div class="section-title">📊 Cumulative Return Comparison (%)</div>
+            {{ returns_chart_html | safe }}
+        </div>
         <div class="chart-container">
             <div class="section-title">🎯 Win Rate Comparison (%)</div>
             {{ win_rate_chart_html | safe }}
         </div>
-        <div class="chart-container">
-            <div class="section-title">📉 Max Drawdown Comparison (%)</div>
-            {{ drawdown_chart_html | safe }}
-        </div>
+    </div>
+
+    <!-- Bar Charts Row 2: Drawdown -->
+    <div class="chart-container">
+        <div class="section-title">📉 Max Drawdown Comparison (%)</div>
+        {{ drawdown_chart_html | safe }}
     </div>
 
     <!-- Active Positions Table -->

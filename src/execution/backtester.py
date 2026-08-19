@@ -92,6 +92,7 @@ class BacktestRunner:
         team_create = TeamCreate(
             name=self.team_config.team.name,
             architecture=self.team_config.team.architecture,
+            model=self.team_config.team.model,
             description=self.team_config.team.description
         )
         db_team = self.db_client.get_or_create_team(team_create)
